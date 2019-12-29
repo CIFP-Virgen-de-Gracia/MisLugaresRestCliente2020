@@ -1,5 +1,8 @@
 package com.example.mislugares.UI.inicio;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import com.example.mislugares.MainActivity;
 import com.example.mislugares.R;
+import com.google.android.material.snackbar.Snackbar;
 
 /**
  * Clase de inicio
@@ -41,4 +45,5 @@ public class InicioFragment extends Fragment {
             //Log.e("ATRAS", "Home");
         }
     }
+
 }

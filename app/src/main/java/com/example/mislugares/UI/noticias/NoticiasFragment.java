@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -304,13 +305,16 @@ public class NoticiasFragment extends Fragment {
         // al refreshlayout que deje de refrescar.  Tambíen pararemos la ejecución de la
         // tarea asíncrona (no se ejecutará el doInBackground)
 
+        private ProgressBar progressBar;
+
         /**
          * Acciones ante sde ejecutarse
          */
         @Override
         protected void onPreExecute() {
-            if (!isNetworkAvailable()) {
+            // Saco la barra de progreso
 
+            if (!isNetworkAvailable()) {
                 this.cancel(true);
                 ((Activity) root.getContext()).runOnUiThread(new Runnable() {
                     @Override
@@ -323,7 +327,11 @@ public class NoticiasFragment extends Fragment {
                 if (swipeRefreshLayout.isRefreshing()) {
                     swipeRefreshLayout.setRefreshing(false);
                 }
+            }else{
+                progressBar = getView().findViewById(R.id.progressBar);
+                progressBar.setVisibility(View.VISIBLE);
             }
+
             //Log.d("Prueba", "onPreExecute OK");
         }
 
@@ -364,6 +372,7 @@ public class NoticiasFragment extends Fragment {
             ad.notifyDataSetChanged();
             rv.setHasFixedSize(true);
             swipeRefreshLayout.setRefreshing(false);
+            progressBar.setVisibility(View.GONE);
             //Log.d("Noticias", "onPostExecute OK");
         }
 

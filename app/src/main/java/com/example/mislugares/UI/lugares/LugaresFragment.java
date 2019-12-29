@@ -1,7 +1,10 @@
 package com.example.mislugares.UI.lugares;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.*;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.util.Log;
@@ -10,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,6 +30,7 @@ import com.example.mislugares.R;
 import com.example.mislugares.REST.APIUtils;
 import com.example.mislugares.REST.LugarRest;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -69,9 +74,12 @@ public class LugaresFragment extends Fragment {
     private Paint p = new Paint();
 
     private SwipeRefreshLayout swipeRefreshLayout;
+    private ProgressBar progressBar;
 
     // Para manejar los elementos de la API REST
     LugarRest lugarRest;
+
+    private View root; // Vista raiz
 
 
     // Valores del spinner
@@ -95,6 +103,12 @@ public class LugaresFragment extends Fragment {
 
         // iniciamos los eventos Asociados
         iniciarEventosIU();
+
+        if (!isNetworkAvailable()) {
+            Snackbar.make(getView(), "Es necesario una conexión a internet. Por favor activa la conexión",
+                    Snackbar.LENGTH_LONG)
+                    .show();
+        }
 
         // Activamos la acción Swipe Reccargar
         iniciarSwipeRecarga();
@@ -486,7 +500,10 @@ public class LugaresFragment extends Fragment {
      */
     private void listarLugares() {
         lugares = new ArrayList<Lugar>();
+        progressBar = getView().findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.VISIBLE);
         findLugares();
+        progressBar.setVisibility(View.GONE);
     }
 
 
@@ -513,7 +530,6 @@ public class LugaresFragment extends Fragment {
                     // Avismos que ha cambiado
                     ad.notifyDataSetChanged();
                     rv.setHasFixedSize(true);
-
                 }
             }
 
@@ -563,6 +579,19 @@ public class LugaresFragment extends Fragment {
             default:
                 break;
         }
+    }
+
+    /**
+     * Comprueba si tenemos conexión
+     *
+     * @return
+     */
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getContext().getSystemService
+                (Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
 
