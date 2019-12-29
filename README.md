@@ -5,10 +5,15 @@ Este ejemplo esta basado en Mis Lugares, una App que resume mucho de lo visto en
 https://github.com/joseluisgs/MisLugares2019
 
 Para comprender cómo romper con las limitaciones de un móvil realizamos la persistencia de la información
-usando una API REST diseñada para tal motivo:
+usando una API REST diseñada para tal motivo en Spring Boot:
 https://github.com/joseluisgs/MisLugaresRestService2019
 
-Se ha creado un nuevo repositorio para que el alumnado no se liará con una nueva rama y separarlas en dos APPs distintas
+El consumo de la API RESRT se realizará usando la librería RetroFIT: 
+https://square.github.io/retrofit/
+
+
+Se ha creado un nuevo repositorio para que el alumnado no se confudiese con las ramas y así trabajara como dos apps 
+independientes, pero manteniendo el histórico de ambas
 
 App con un poco de todo
 Ficheros, Recycler View, Bases de Datos, Cámara, GPS y Control por Voz
