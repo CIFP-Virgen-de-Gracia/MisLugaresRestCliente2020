@@ -8,6 +8,8 @@ Para comprender cómo romper con las limitaciones de un móvil realizamos la per
 usando una API REST diseñada para tal motivo:
 https://github.com/joseluisgs/MisLugaresRestService2019
 
+Se ha creado un nuevo repositorio para que el alumnado no se liará con una nueva rama y separarlas en dos APPs distintas
+
 App con un poco de todo
 Ficheros, Recycler View, Bases de Datos, Cámara, GPS y Control por Voz
 
