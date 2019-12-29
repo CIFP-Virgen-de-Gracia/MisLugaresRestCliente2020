@@ -1,6 +1,7 @@
 com.example.mislugares
 com.example.mislugares.Controladores
 com.example.mislugares.Modelos
+com.example.mislugares.REST
 com.example.mislugares.UI.acerca_de
 com.example.mislugares.UI.inicio
 com.example.mislugares.UI.lugares
