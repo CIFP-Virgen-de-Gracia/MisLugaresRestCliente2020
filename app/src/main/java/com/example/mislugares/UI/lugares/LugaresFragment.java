@@ -31,6 +31,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -47,6 +48,17 @@ public class LugaresFragment extends Fragment {
     private static final int ACTUALIZAR = 3;
     private static final int VOZ = 10;
 
+    // Filtro
+    private static final int NADA = 10;
+    private static final int NOMBRE_ASC = 11;
+    private static final int NOMBRE_DESC = 12;
+    private static final int TIPO_ASC = 13;
+    private static final int TIPO_DESC = 14;
+    private static final int FECHA_ASC = 15;
+    private static final int FECHA_DESC = 16;
+    private int tipoFiltro = NADA;
+
+    // Listas y adaptadores
     private List<Lugar> lugares = new ArrayList<Lugar>();
     private RecyclerView rv;
     private LugaresListAdapter ad;
@@ -155,7 +167,7 @@ public class LugaresFragment extends Fragment {
                 swipeRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.textColor);
                 //Le pasamos el fragment manager para gestionar las transacciones necesarias
                 // Consultamos los lugares y se lo pasamos al adaptador
-                listarLugares("");
+                listarLugares();
                 swipeRefreshLayout.setRefreshing(false);
 
             }
@@ -196,7 +208,7 @@ public class LugaresFragment extends Fragment {
                 ArrayList<String> voz = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                 // Analizamos los que nos puede llegar
                 String secuencia = "";
-                String tipoFiltro;
+                int tipoFiltro;
                 // Concatenamos todo lo que tiene la cadena encontrada para buscar palabras clave
                 for (String v : voz) {
                     secuencia += " " + v;
@@ -205,10 +217,8 @@ public class LugaresFragment extends Fragment {
                 // A partir de aquí podemos crear el if todo lo complejo que queramos o irnos a otro fichero
                 // O métpdp
                 if (secuencia != null) {
-                    tipoFiltro = analizarFiltroVoz(secuencia);
-                    //Log.d("Filtro", secuencia);
-                    //Log.d("Filtro", tipoFiltro);
-                    this.listarLugares(tipoFiltro);
+                    analizarFiltroVoz(secuencia);
+                    listarLugares();
                 }
             }
 
@@ -219,47 +229,41 @@ public class LugaresFragment extends Fragment {
      * Analiza el resultado de procesar la voz
      *
      * @param secuencia Sencuencia de entrada
-     * @return filtro de salida
      */
-    private String analizarFiltroVoz(String secuencia) {
-        String tipoFiltro;
+    private void analizarFiltroVoz(String secuencia) {
         // Nombre
         if ((secuencia.contains("nombre")) &&
                 !((secuencia.contains("descendente") || secuencia.contains("inverso")))) {
-            tipoFiltro = "UPPER(nombre) ASC";
+            tipoFiltro = NOMBRE_ASC;
         } else if ((secuencia.contains("nombre")) &&
                 ((secuencia.contains("descendente") || secuencia.contains("inverso")))) {
-
-            tipoFiltro = "UPPER(nombre) DESC";
+            tipoFiltro = NOMBRE_DESC;
             // Fecha
         } else if ((secuencia.contains("fecha")) &&
                 !((secuencia.contains("descendente") || secuencia.contains("inverso")))) {
-            tipoFiltro = "UPPER(fecha) ASC";
+            tipoFiltro = FECHA_ASC;
         } else if ((secuencia.contains("fecha")) &&
                 ((secuencia.contains("descendente") || secuencia.contains("inverso")))) {
-            tipoFiltro = "UPPER(fecha) DESC";
-
+            tipoFiltro = FECHA_DESC;
             // Tipo
         } else if ((secuencia.contains("tipo")) &&
                 !((secuencia.contains("descendente") || secuencia.contains("inverso")))) {
-            tipoFiltro = "UPPER(tipo) ASC";
+            tipoFiltro = TIPO_ASC;
         } else if ((secuencia.contains("tipo")) &&
                 ((secuencia.contains("descendente") || secuencia.contains("inverso")))) {
-            tipoFiltro = "UPPER(tipo) DESC";
-
+            tipoFiltro = TIPO_DESC;
             // Lugar = nombre
         } else if ((secuencia.contains("lugar")) &&
                 !((secuencia.contains("descendente") || secuencia.contains("inverso")))) {
-            tipoFiltro = "UPPER(nombre) ASC";
+            tipoFiltro = NOMBRE_ASC;
         } else if ((secuencia.contains("lugar")) &&
                 ((secuencia.contains("descendente") || secuencia.contains("inverso")))) {
-            tipoFiltro = "UPPER(nombre) DESC";
+            tipoFiltro = NOMBRE_DESC;
 
             // Por defecto
         } else {
-            tipoFiltro = "UPPER(nombre) ASC";
+            tipoFiltro = NADA;
         }
-        return tipoFiltro;
     }
 
     /**
@@ -292,25 +296,29 @@ public class LugaresFragment extends Fragment {
         this.spinnerFiltro.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String tipoFiltro = "";
+                tipoFiltro = NADA;
                 switch (spinnerFiltro.getSelectedItemPosition()) {
+                    case 0:
+                        tipoFiltro = NADA;
+                        break;
                     case 1:
-                        tipoFiltro = "UPPER(nombre) ASC";
+                        tipoFiltro = NOMBRE_ASC;
                         break;
                     case 2:
-                        tipoFiltro = "DATE(fecha) ASC";
+                        tipoFiltro = FECHA_ASC;
                         break;
                     case 3:
-                        tipoFiltro = "UPPER(tipo) ASC";
+                        tipoFiltro = TIPO_ASC;
                         break;
                     case 4:
-                        tipoFiltro = "nombre ASC";
+                        tipoFiltro = NOMBRE_ASC;
                         break;
                     default:
+                        tipoFiltro = NADA;
                         break;
                 }
                 // Listamos los lugares y cargamos el recycler
-                listarLugares(tipoFiltro);
+                listarLugares();
             }
 
             // Probar a quitar si puedes ;)
@@ -474,18 +482,13 @@ public class LugaresFragment extends Fragment {
     }
 
     /**
-     * Consultamos los lugares en base a un filtro
-     * El filtro como está no funciona, porque habrñia que hacer una llamada a la api por cada
-     * mecanismos de ordenación
-     *
-     * @param filtro
+     * lista los lugares llamando
      */
-    private void listarLugares(String filtro) {
+    private void listarLugares() {
         lugares = new ArrayList<Lugar>();
         findLugares();
-
-
     }
+
 
     /**
      * Llama a la API REST para listar lugares
@@ -503,6 +506,8 @@ public class LugaresFragment extends Fragment {
                     // Si tienes exito nos quedamos con el ResponseBody, listado en JSON
                     // Nos hace el pasrser automáticamente
                     lugares = response.body();
+                    // Ordenamos la lista obtenida
+                    ordenarLugares();
                     ad = new LugaresListAdapter(lugares, getFragmentManager(), getResources());
                     rv.setAdapter(ad);
                     // Avismos que ha cambiado
@@ -517,6 +522,47 @@ public class LugaresFragment extends Fragment {
                 Log.e("REST: ", t.getMessage());
             }
         });
+    }
+
+
+    private void ordenarLugares() {
+         /*
+        Como comprar
+        Collections.sort(list, new Comparator<ActiveAlarm>() {
+        @Override
+        public int compare(ActiveAlarm a1, ActiveAlarm a2) {
+            return a1.timeStarted - a2.timeStarted;
+        }
+            });
+
+            O usar expresiones lambda
+            Collections.sort(list, (ActiveAlarm a1, ActiveAlarm a2) -> a1.name.compareTo(a2.name) );
+         */
+        switch (tipoFiltro) {
+            case NADA:
+                Collections.sort(this.lugares, (Lugar l1, Lugar l2) -> l1.getId().compareTo(l2.getId()));
+                break;
+            case NOMBRE_ASC:
+                Collections.sort(this.lugares, (Lugar l1, Lugar l2) -> l1.getNombre().compareTo(l2.getNombre()));
+                break;
+            case NOMBRE_DESC:
+                Collections.sort(this.lugares, (Lugar l1, Lugar l2) -> l2.getNombre().compareTo(l1.getNombre()));
+                break;
+            case TIPO_ASC:
+                Collections.sort(this.lugares, (Lugar l1, Lugar l2) -> l1.getTipo().compareTo(l2.getTipo()));
+                break;
+            case TIPO_DESC:
+                Collections.sort(this.lugares, (Lugar l1, Lugar l2) -> l2.getTipo().compareTo(l1.getTipo()));
+                break;
+            case FECHA_ASC:
+                Collections.sort(this.lugares, (Lugar l1, Lugar l2) -> l1.getFecha().compareTo(l2.getFecha()));
+                break;
+            case FECHA_DESC:
+                Collections.sort(this.lugares, (Lugar l1, Lugar l2) -> l2.getFecha().compareTo(l1.getFecha()));
+                break;
+            default:
+                break;
+        }
     }
 
 

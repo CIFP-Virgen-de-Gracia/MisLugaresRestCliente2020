@@ -39,6 +39,14 @@ public class LugaresListAdapter extends RecyclerView.Adapter<LugaresListAdapter.
         this.res = res;
     }
 
+    /**
+     * Devuleve la lista de lugares
+     * @return Lista de Lugates
+     */
+    public List<Lugar> getListaLugares() {
+        return this.listaLugares;
+    }
+
     // Asociamos la vista
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

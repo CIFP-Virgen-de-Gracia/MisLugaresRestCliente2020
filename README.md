@@ -17,7 +17,7 @@ Se ha creado un nuevo repositorio para que el alumnado no se confudiese con las 
 independientes, pero manteniendo el histórico de ambas
 
 Se ha eliminado el filtro, porque equivaldría a realizar una llamada a cada API por filtro usando 
-el métodpde ordención de Spring Boot. Se puede implementar alternativas
+el métodpde ordención de Spring Boot. Se has implementado otra alternativa una vez obtenida la lista
 
 App con un poco de todo
 Servicios REST Ficheros, Recycler View, Bases de Datos, Cámara, GPS y Control por Voz
