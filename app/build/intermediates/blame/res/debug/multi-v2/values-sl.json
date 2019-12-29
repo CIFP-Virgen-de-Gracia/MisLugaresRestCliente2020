@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "/Users/link/Proyectos/MisLugares/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-sl/values-sl.xml",
+            "outputFile": "/Users/link/Proyectos/MisLugaresClient/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-sl/values-sl.xml",
             "map": [
                 {
                     "source": "/Users/link/.gradle/caches/transforms-2/files-2.1/a8ee2aaa665adb2ac6bf24eb5f5eebf0/jetified-play-services-basement-17.0.0/res/values-sl/values.xml",

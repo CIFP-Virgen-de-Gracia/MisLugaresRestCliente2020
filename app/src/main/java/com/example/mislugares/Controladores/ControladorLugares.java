@@ -76,7 +76,7 @@ public class ControladorLugares {
             if (c.moveToFirst()) {
                 do {
 
-                    aux = new Lugar(c.getInt(0), c.getString(1),
+                    aux = new Lugar(c.getLong(0), c.getString(1),
                             c.getString(2), c.getString(3),
                             c.getFloat(4), c.getFloat(5), c.getString(6));
                     lista.add(aux);

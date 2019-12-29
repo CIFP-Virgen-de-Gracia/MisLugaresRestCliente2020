@@ -1,15 +1,39 @@
 package com.example.mislugares.Modelos;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Clase Lugar
  */
 public class Lugar {
-    private long id;
+    // Indicamos como se va a serializar los campos en jSON
+    @SerializedName("id")
+    @Expose
+    private Long id;
+
+    @SerializedName("nombre")
+    @Expose
     private String nombre;
+
+    @SerializedName("tipo")
+    @Expose
     private String tipo;
+
+    @SerializedName("fecha")
+    @Expose
     private String fecha;
-    private float latitud;
-    private float longitud;
+
+    @SerializedName("latitud")
+    @Expose
+    private Float latitud;
+
+    @SerializedName("longitud")
+    @Expose
+    private Float longitud;
+
+    @SerializedName("longitud")
+    @Expose
     private String imagen;
 
     public Lugar() {
@@ -27,7 +51,8 @@ public class Lugar {
      * @param longitud Longitud de Lugar
      * @param imagen   Imagen de Lugar
      */
-    public Lugar(long id, String nombre, String tipo, String fecha, float latitud, float longitud, String imagen) {
+
+    public Lugar(Long id, String nombre, String tipo, String fecha, Float latitud, Float longitud, String imagen) {
         this.id = id;
         this.nombre = nombre;
         this.tipo = tipo;
@@ -37,11 +62,11 @@ public class Lugar {
         this.imagen = imagen;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -69,19 +94,19 @@ public class Lugar {
         this.fecha = fecha;
     }
 
-    public float getLatitud() {
+    public Float getLatitud() {
         return latitud;
     }
 
-    public void setLatitud(float latitud) {
+    public void setLatitud(Float latitud) {
         this.latitud = latitud;
     }
 
-    public float getLongitud() {
+    public Float getLongitud() {
         return longitud;
     }
 
-    public void setLongitud(float longitud) {
+    public void setLongitud(Float longitud) {
         this.longitud = longitud;
     }
 
@@ -91,5 +116,18 @@ public class Lugar {
 
     public void setImagen(String imagen) {
         this.imagen = imagen;
+    }
+
+    @Override
+    public String toString() {
+        return "Lugar{" +
+                "id=" + id +
+                ", nombre='" + nombre + '\'' +
+                ", tipo='" + tipo + '\'' +
+                ", fecha='" + fecha + '\'' +
+                ", latitud=" + latitud +
+                ", longitud=" + longitud +
+                ", imagen='" + imagen + '\'' +
+                '}';
     }
 }

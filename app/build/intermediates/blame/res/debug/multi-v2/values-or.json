@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "/Users/link/Proyectos/MisLugares/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-or/values-or.xml",
+            "outputFile": "/Users/link/Proyectos/MisLugaresClient/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-or/values-or.xml",
             "map": [
                 {
                     "source": "/Users/link/.gradle/caches/transforms-2/files-2.1/5fcc8d135d2604014c1bfa4d85c913c1/jetified-navigation-ui-2.0.0/res/values-or/values-or.xml",
