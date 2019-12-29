@@ -6,9 +6,16 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+import androidx.fragment.app.Fragment;
 import com.example.mislugares.Modelos.Lugar;
+import com.example.mislugares.REST.APIUtils;
+import com.example.mislugares.REST.LugarRest;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -20,6 +27,10 @@ public class ControladorLugares {
     private static ControladorLugares instancia;
     private static Context context;
 
+    // Para manejar los elementos de la API REST
+    LugarRest lugarRest;
+    List<Lugar> list;
+
 
     private ControladorLugares() {
 
@@ -28,65 +39,49 @@ public class ControladorLugares {
     /**
      * Constructor mediante isntancia Singleton
      *
-     * @param contexto Coontexto de la palicación
      * @return instancia de Controlador
      */
     public static ControladorLugares getControlador(Context contexto) {
         if (instancia == null) {
             instancia = new ControladorLugares();
+            context = contexto;
+
         }
-        //else{
-        //    // Log.i("CL", "Usando el controlador Lugares existente ");
-        //}
-        context = contexto;
+
         return instancia;
     }
 
     /**
      * Lista todos los lugares almacenados en el sistema de almacenamiento
+     * El filtro como está no funciona, porque habrñia que hacer una llamada a la api por cada
+     * mecanismos de ordenación
      *
      * @param filtro Filtro de ordenación
      * @return lista de lugares
      */
-    public ArrayList<Lugar> listarLugares(String filtro) {
-        // Abrimos la BD en Modo Lectura
-        ArrayList<Lugar> lista = new ArrayList<Lugar>();
-        Lugar aux;
-        ControladorBD bdLugares = new ControladorBD(context, "BDLugares", null, 1);
-        SQLiteDatabase bd = bdLugares.getReadableDatabase();
-        if (bd != null) {
-            // Podemos hacer la consulta directamente o parametrizada
-            //Cursor c = bd.rawQuery("SELECT * FROM Lugares " + filtro, null);
-            // http://www.sgoliver.net/blog/bases-de-datos-en-android-iii-consultarrecuperar-registros/
+    public void listarLugares(String filtro) {
+        lugarRest =  APIUtils.getService();
+        list = new ArrayList<Lugar>();
 
-            /* Ejemplo de cada campo de la consulta
-            String table = "table2";
-            String[] columns = {"column1", "column3"};
-            String selection = "column3 =?";
-            String[] selectionArgs = {"apple"};
-            String groupBy = null;
-            String having = null;
-            String orderBy = "column3 DESC";
-            String limit = "10";
+        // Creamos la tarea que llamará al servicio rest y la encolamos
+        Call<List<Lugar>> call = lugarRest.findAll();
+        call.enqueue(new Callback<List<Lugar>>() {
+            @Override
+            public void onResponse(Call<List<Lugar>> call, Response<List<Lugar>> response) {
+                if(response.isSuccessful()){
+                    // Si tienes exito nos quedamos con el ResponseBody, listado en JSON
+                    // Nos hace el pasrser automáticamente
+                    list = response.body();
 
-            Cursor cursor = db.query(table, columns, selection, selectionArgs, groupBy, having, orderBy, limit);
-             */
-
-            Cursor c = bd.query("Lugares", null, null, null, null, null, filtro, null);
-            if (c.moveToFirst()) {
-                do {
-
-                    aux = new Lugar(c.getLong(0), c.getString(1),
-                            c.getString(2), c.getString(3),
-                            c.getFloat(4), c.getFloat(5), c.getString(6));
-                    lista.add(aux);
-                } while (c.moveToNext());
+                }
             }
-            bd.close();
-            bdLugares.close();
 
-        }
-        return lista;
+            @Override
+            public void onFailure(Call<List<Lugar>> call, Throwable t) {
+                Log.e("REST: ", t.getMessage());
+            }
+        });
+
     }
     // Manejar un CRUD
     // https://parzibyte.me/blog/2019/02/04/tutorial-sqlite-android-crud-create-read-update-delete/

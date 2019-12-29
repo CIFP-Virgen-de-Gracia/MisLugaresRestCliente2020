@@ -32,7 +32,7 @@ public class Lugar {
     @Expose
     private Float longitud;
 
-    @SerializedName("longitud")
+    @SerializedName("imagen")
     @Expose
     private String imagen;
 

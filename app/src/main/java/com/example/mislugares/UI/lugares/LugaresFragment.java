@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.*;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,9 +24,15 @@ import com.example.mislugares.Controladores.ControladorLugares;
 import com.example.mislugares.MainActivity;
 import com.example.mislugares.Modelos.Lugar;
 import com.example.mislugares.R;
+import com.example.mislugares.REST.APIUtils;
+import com.example.mislugares.REST.LugarRest;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import static android.app.Activity.RESULT_OK;
@@ -41,7 +48,7 @@ public class LugaresFragment extends Fragment {
     private static final int ACTUALIZAR = 3;
     private static final int VOZ = 10;
 
-    private ArrayList<Lugar> lugares = new ArrayList<>();
+    private List<Lugar> lugares = new ArrayList<Lugar>();
     private RecyclerView rv;
     private LugaresListAdapter ad;
 
@@ -51,6 +58,10 @@ public class LugaresFragment extends Fragment {
     private Paint p = new Paint();
 
     private SwipeRefreshLayout swipeRefreshLayout;
+
+    // Para manejar los elementos de la API REST
+    LugarRest lugarRest;
+
 
     // Valores del spinner
     private Spinner spinnerFiltro;
@@ -465,18 +476,40 @@ public class LugaresFragment extends Fragment {
 
     /**
      * Consultamos los lugares en base a un filtro
+     * El filtro como está no funciona, porque habrñia que hacer una llamada a la api por cada
+     * mecanismos de ordenación
      *
      * @param filtro
      */
     private void listarLugares(String filtro) {
-        lugares.clear();
-        ControladorLugares c = ControladorLugares.getControlador(getContext());
-        lugares = c.listarLugares(filtro);
-        ad = new LugaresListAdapter(lugares, getFragmentManager(), getResources());
-        rv.setAdapter(ad);
-        // Avismos que ha cambiado
-        ad.notifyDataSetChanged();
-        rv.setHasFixedSize(true);
+        lugares = new ArrayList<Lugar>();
+        lugarRest =  APIUtils.getService();
+
+
+        // Creamos la tarea que llamará al servicio rest y la encolamos
+        Call<List<Lugar>> call = lugarRest.findAll();
+        call.enqueue(new Callback<List<Lugar>>() {
+            @Override
+            public void onResponse(Call<List<Lugar>> call, Response<List<Lugar>> response) {
+                if(response.isSuccessful()){
+                    // Si tienes exito nos quedamos con el ResponseBody, listado en JSON
+                    // Nos hace el pasrser automáticamente
+                    lugares = response.body();
+                    ad = new LugaresListAdapter(lugares, getFragmentManager(), getResources());
+                    rv.setAdapter(ad);
+                    // Avismos que ha cambiado
+                    ad.notifyDataSetChanged();
+                    rv.setHasFixedSize(true);
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Lugar>> call, Throwable t) {
+                Log.e("REST: ", t.getMessage());
+            }
+        });
+
 
     }
 
