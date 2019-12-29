@@ -22,6 +22,8 @@ el métodpde ordención de Spring Boot. Se puede implementar alternativas
 App con un poco de todo
 Servicios REST Ficheros, Recycler View, Bases de Datos, Cámara, GPS y Control por Voz
 
+Los controladores de base de datos desaparecen y todo se gestiona por los controladores de REST
+
 Es importante que gereneréis bien la clave de la API de Google Maps
 
 Mis Lugares:
