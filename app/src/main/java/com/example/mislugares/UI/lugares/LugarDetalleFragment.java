@@ -421,15 +421,26 @@ public class LugarDetalleFragment extends Fragment implements OnMapReadyCallback
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which) {
                             case 0:
-                                // Cargamos el controlador
-                                ControladorLugares c = ControladorLugares.getControlador(getContext());
-                                if (c.eliminarLugar(lugar)) {
-                                    Snackbar.make(getView(), "¡Lugar eliminado con éxito!", Snackbar.LENGTH_LONG).show();
-                                    // Volver
-                                    volver();
-                                } else {
-                                    Snackbar.make(getView(), "Ha existido un error al eliminar su lugar", Snackbar.LENGTH_LONG).show();
-                                }
+                                // Llamamos al método eliminar
+                                lugarRest = APIUtils.getService();
+                                Call<Lugar> call = lugarRest.delete(lugar.getId());
+                                call.enqueue(new Callback<Lugar>() {
+                                    @Override
+                                    public void onResponse(Call<Lugar> call, Response<Lugar> response) {
+                                        // Si ok
+                                        if(response.isSuccessful()){
+                                            Snackbar.make(getView(), "¡Lugar eliminado con éxito!", Snackbar.LENGTH_LONG).show();
+                                            // Volver
+                                            volver();
+                                        }
+                                    }
+                                    //Si error
+                                    @Override
+                                    public void onFailure(Call<Lugar> call, Throwable t) {
+                                        Snackbar.make(getView(), "Ha existido un error al eliminar su lugar", Snackbar.LENGTH_LONG).show();
+                                    }
+                                });
+
                                 break;
                             case 1:
                                 Snackbar.make(getView(), "No se ha realizado ninguna acción", Snackbar.LENGTH_LONG).show();
@@ -504,17 +515,28 @@ public class LugarDetalleFragment extends Fragment implements OnMapReadyCallback
                                     lugar.setNombre(etNombre.getEditText().getText().toString());
                                     lugar.setFecha(tvFecha.getText().toString());
                                     lugar.setTipo(spinnerLugarDetalleTipo.getSelectedItem().toString());
-                                    lugar.setLatitud((float) posicion.latitude);
-                                    lugar.setLongitud((float) posicion.longitude);
+                                    lugar.setLatitud(Float.valueOf((float) posicion.latitude));
+                                    lugar.setLongitud(Float.valueOf((float)posicion.longitude));
                                     lugar.setImagen(Utilidades.bitmapToBase64(imagen));
-                                    ControladorLugares c = ControladorLugares.getControlador(getContext());
-                                    if (c.actualizarLugar(lugar)) {
-                                        Snackbar.make(getView(), "¡Lugar actualizado con éxito!", Snackbar.LENGTH_LONG).show();
-                                        // Volvemos
-                                        volver();
-                                    } else {
-                                        Snackbar.make(getView(), "Ha habido un error al actualizar su lugar", Snackbar.LENGTH_LONG).show();
-                                    }
+                                    // Llamamos al método actualizar
+                                    lugarRest = APIUtils.getService();
+                                    Call<Lugar> call = lugarRest.update(lugar.getId(), lugar);
+                                    call.enqueue(new Callback<Lugar>() {
+                                        @Override
+                                        // Si todo ok
+                                        public void onResponse(Call<Lugar> call, Response<Lugar> response) {
+                                            if(response.isSuccessful()){
+                                                Snackbar.make(getView(), "¡Lugar actualizado con éxito!", Snackbar.LENGTH_LONG).show();
+                                                // Volvemos
+                                                volver();
+                                            }
+                                        }
+                                        // Si error
+                                        @Override
+                                        public void onFailure(Call<Lugar> call, Throwable t) {
+                                            Snackbar.make(getView(), "Ha habido un error al actualizar su lugar", Snackbar.LENGTH_LONG).show();
+                                        }
+                                    });
                                 }
                                 break;
                             case 1:
