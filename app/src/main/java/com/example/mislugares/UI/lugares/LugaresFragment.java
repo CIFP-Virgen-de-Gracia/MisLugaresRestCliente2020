@@ -482,6 +482,15 @@ public class LugaresFragment extends Fragment {
      */
     private void listarLugares(String filtro) {
         lugares = new ArrayList<Lugar>();
+        findLugares();
+
+
+    }
+
+    /**
+     * Llama a la API REST para listar lugares
+     */
+    private void findLugares() {
         lugarRest = APIUtils.getService();
 
 
@@ -508,8 +517,6 @@ public class LugaresFragment extends Fragment {
                 Log.e("REST: ", t.getMessage());
             }
         });
-
-
     }
 
 

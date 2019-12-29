@@ -15,7 +15,6 @@ import com.example.mislugares.Modelos.Lugar;
 import com.example.mislugares.R;
 import com.example.mislugares.Utilidades.Utilidades;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

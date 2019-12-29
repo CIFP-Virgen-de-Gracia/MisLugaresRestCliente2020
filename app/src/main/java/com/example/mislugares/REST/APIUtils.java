@@ -1,7 +1,5 @@
 package com.example.mislugares.REST;
 
-import android.util.Log;
-
 /**
  * API Utils para iniciar y configurar el Cliente RetroFIT
  * Aquí definimos las opciones del API REST que consumamos

@@ -1,7 +1,8 @@
 # MisLugaresClientRest
 2DAM 2019-2020. 
 
-Este ejemplo esta basado en Mis Lugares, una App que resume mucho de lo visto en el primer trimestre:
+Este ejemplo esta basado en Mis Lugares, una App que resume mucho de lo visto en el primer trimestre.
+Es la primera aplicación que deberías ver
 https://github.com/joseluisgs/MisLugares2019
 
 Para comprender cómo romper con las limitaciones de un móvil realizamos la persistencia de la información
@@ -19,7 +20,7 @@ Se ha eliminado el filtro, porque equivaldría a realizar una llamada a cada API
 el métodpde ordención de Spring Boot. Se puede implementar alternativas
 
 App con un poco de todo
-Ficheros, Recycler View, Bases de Datos, Cámara, GPS y Control por Voz
+Servicios REST Ficheros, Recycler View, Bases de Datos, Cámara, GPS y Control por Voz
 
 Es importante que gereneréis bien la clave de la API de Google Maps
 
@@ -32,5 +33,4 @@ Mis Lugares:
 20/12/2019: JavaDoc
 
 Mis Lugares Client Rest
-29/12/2019: Inicio del consumo de la API REST
-29/12/2019: Listado usando API REST
+29/12/2019: Cambio a Api REST
