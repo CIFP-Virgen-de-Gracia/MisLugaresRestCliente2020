@@ -28,6 +28,8 @@ import com.example.mislugares.Controladores.ControladorLugares;
 import com.example.mislugares.MainActivity;
 import com.example.mislugares.Modelos.Lugar;
 import com.example.mislugares.R;
+import com.example.mislugares.REST.APIUtils;
+import com.example.mislugares.REST.LugarRest;
 import com.example.mislugares.Utilidades.Utilidades;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -41,6 +43,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import java.io.IOException;
 import java.util.Calendar;
@@ -66,6 +71,9 @@ public class LugarDetalleFragment extends Fragment implements OnMapReadyCallback
     private Lugar lugar;
     // Eso se hace para compartir
     public static Lugar lugarActual;
+
+    // Para manejar los elementos de la API REST
+    LugarRest lugarRest;
 
     // Variables de la interfaz
     private Spinner spinnerLugarDetalleTipo;
@@ -444,18 +452,31 @@ public class LugarDetalleFragment extends Fragment implements OnMapReadyCallback
             lugar.setNombre(this.etNombre.getEditText().getText().toString());
             lugar.setFecha(this.tvFecha.getText().toString());
             lugar.setTipo(this.spinnerLugarDetalleTipo.getSelectedItem().toString());
-            lugar.setLatitud((float) posicion.latitude);
-            lugar.setLongitud((float) posicion.longitude);
+            lugar.setLatitud(Float.valueOf((float) posicion.latitude));
+            lugar.setLongitud(Float.valueOf((float)posicion.longitude));
             lugar.setImagen(Utilidades.bitmapToBase64(imagen));
 
-            ControladorLugares c = ControladorLugares.getControlador(getContext());
-            if (c.insertarLugar(lugar)) {
-                Snackbar.make(getView(), "¡Lugar añadido con éxito!", Snackbar.LENGTH_LONG).show();
-                // Volvemos
-                volver();
-            } else {
-                Snackbar.make(getView(), "Ha habido un error al insertar su lugar", Snackbar.LENGTH_LONG).show();
-            }
+            // Llamamos al metodo de crear
+            lugarRest = APIUtils.getService();
+            Call<Lugar> call = lugarRest.create(lugar);
+            call.enqueue(new Callback<Lugar>() {
+                // Si todo ok
+                @Override
+                public void onResponse(Call<Lugar> call, Response<Lugar> response) {
+                    if(response.isSuccessful()){
+                        Snackbar.make(getView(), "¡Lugar añadido con éxito!", Snackbar.LENGTH_LONG).show();
+                        // Volvemos
+                        volver();
+                    }
+                }
+
+                // Si error
+                @Override
+                public void onFailure(Call<Lugar> call, Throwable t) {
+                    Snackbar.make(getView(), "Ha habido un error al insertar su lugar", Snackbar.LENGTH_LONG).show();
+                }
+            });
+
         }
 
 
