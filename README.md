@@ -15,6 +15,9 @@ https://square.github.io/retrofit/
 Se ha creado un nuevo repositorio para que el alumnado no se confudiese con las ramas y así trabajara como dos apps 
 independientes, pero manteniendo el histórico de ambas
 
+Se ha eliminado el filtro, porque equivaldría a realizar una llamada a cada API por filtro usando 
+el métodpde ordención de Spring Boot. Se puede implementar alternativas
+
 App con un poco de todo
 Ficheros, Recycler View, Bases de Datos, Cámara, GPS y Control por Voz
 
@@ -30,3 +33,4 @@ Mis Lugares:
 
 Mis Lugares Client Rest
 29/12/2019: Inicio del consumo de la API REST
+29/12/2019: Listado usando API REST

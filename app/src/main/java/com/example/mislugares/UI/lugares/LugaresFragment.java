@@ -20,7 +20,6 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import com.example.mislugares.Controladores.ControladorLugares;
 import com.example.mislugares.MainActivity;
 import com.example.mislugares.Modelos.Lugar;
 import com.example.mislugares.R;
@@ -483,7 +482,7 @@ public class LugaresFragment extends Fragment {
      */
     private void listarLugares(String filtro) {
         lugares = new ArrayList<Lugar>();
-        lugarRest =  APIUtils.getService();
+        lugarRest = APIUtils.getService();
 
 
         // Creamos la tarea que llamará al servicio rest y la encolamos
@@ -491,7 +490,7 @@ public class LugaresFragment extends Fragment {
         call.enqueue(new Callback<List<Lugar>>() {
             @Override
             public void onResponse(Call<List<Lugar>> call, Response<List<Lugar>> response) {
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     // Si tienes exito nos quedamos con el ResponseBody, listado en JSON
                     // Nos hace el pasrser automáticamente
                     lugares = response.body();
