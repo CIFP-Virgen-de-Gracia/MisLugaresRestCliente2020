@@ -36,3 +36,4 @@ Mis Lugares:
 
 Mis Lugares Client Rest
 29/12/2019: Cambio a Api REST
+14/01/2020: Publicación para 2DAM
